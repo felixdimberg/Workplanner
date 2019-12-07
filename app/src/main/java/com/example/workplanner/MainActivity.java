@@ -1,5 +1,6 @@
 package com.example.workplanner;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -139,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchAddActivity(View view) {
+        Intent intent = new Intent (this, AddActivity.class);
+        startActivity(intent);
     }
 
     public void launchSettingActivity(View view) {
