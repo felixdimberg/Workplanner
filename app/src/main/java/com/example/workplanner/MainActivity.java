@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.workplanner.databases.DatabaseQuery;
 import com.example.workplanner.databases.EventObjects;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,24 +44,35 @@ public class MainActivity extends AppCompatActivity {
         currentDate.setText(displayDateInString(cal.getTime()));
         currentDay.setText(displayDayInString(cal.getTime()));
         indexStatus = true;
-        displayDailyEvents();
+        try {
+            displayDailyEvents();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         ImageView previousDay = findViewById(R.id.previous_day);
         ImageView nextDay = findViewById(R.id.next_day);
         previousDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                previousCalendarDate();
+                try {
+                    previousCalendarDate();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
         nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextCalendarDate();
+                try {
+                    nextCalendarDate();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
-        createEventView(900, 1000, "plugg");
     }
-    private void previousCalendarDate(){
+    private void previousCalendarDate() throws ParseException {
         if (indexStatus) {
             mLayout.removeViewAt(eventIndex - 1);
             indexStatus = false;
@@ -71,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         currentDay.setText(displayDayInString(cal.getTime()));
         displayDailyEvents();
     }
-    private void nextCalendarDate(){
+    private void nextCalendarDate() throws ParseException {
         if (indexStatus) {
             mLayout.removeViewAt(eventIndex - 1);
             indexStatus = false;
@@ -89,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat formatter = new SimpleDateFormat("EEEE", Locale.ENGLISH);
         return formatter.format(mDate);
     }
-    private void displayDailyEvents(){
+    private void displayDailyEvents() throws ParseException {
         Date calendarDate = cal.getTime();
         List<EventObjects> dailyEvent = mQuery.getAllFutureEvents(calendarDate);
         for(EventObjects eObject : dailyEvent){

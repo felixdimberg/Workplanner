@@ -1,7 +1,9 @@
 package com.example.workplanner.databases;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,13 +16,16 @@ import java.util.Locale;
 
 public class DatabaseQuery extends com.example.workplanner.databases.DatabaseObject {
 
-    private static final String TAG = com.example.workplanner.databases.Database.class.getSimpleName();
+
 
     public DatabaseQuery(Context context) {
         super(context);
     }
 
-    public List<EventObjects> getAllFutureEvents(Date mDate){
+    private static final String TAG = "Databas";
+
+    @SuppressLint("SimpleDateFormat")
+    public List<EventObjects> getAllFutureEvents(Date mDate) throws ParseException {
         Calendar calDate = Calendar.getInstance();
         Calendar dDate = Calendar.getInstance();
         calDate.setTime(mDate);
@@ -39,13 +44,13 @@ public class DatabaseQuery extends com.example.workplanner.databases.DatabaseObj
                 String startDate = cursor.getString(cursor.getColumnIndexOrThrow("reminder"));
                 String endDate = cursor.getString(cursor.getColumnIndexOrThrow("end"));
                 //convert start date to date object
-                Date reminderDate = convertStringToDate(startDate);
-                Date end = convertStringToDate(endDate);
+                Date reminderDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(startDate);
+                Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(endDate);
+                assert reminderDate != null;
                 dDate.setTime(reminderDate);
                 int dDay = dDate.get(Calendar.DAY_OF_MONTH);
                 int dMonth = dDate.get(Calendar.MONTH) + 1;
                 int dYear = dDate.get(Calendar.YEAR);
-
                 if(calDay == dDay && calMonth == dMonth && calYear == dYear){
                     events.add(new EventObjects(id, message, reminderDate, end));
                 }
@@ -55,14 +60,4 @@ public class DatabaseQuery extends com.example.workplanner.databases.DatabaseObj
         return events;
     }
 
-    private Date convertStringToDate(String dateInString){
-        DateFormat format = new SimpleDateFormat("d-MM-yyyy HH:mm", Locale.ENGLISH);
-        Date date = null;
-        try {
-            date = format.parse(dateInString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
 }
