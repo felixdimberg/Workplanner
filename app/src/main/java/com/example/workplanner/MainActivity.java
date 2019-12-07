@@ -23,6 +23,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private TextView currentDate;
+    private TextView currentDay;
     private Calendar cal = Calendar.getInstance();
     private DatabaseQuery mQuery;
     private RelativeLayout mLayout;
@@ -37,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         mLayout = findViewById(R.id.left_event_column);
         eventIndex = mLayout.getChildCount();
         currentDate = findViewById(R.id.display_current_date);
+        currentDay =findViewById(R.id.display_current_day);
         currentDate.setText(displayDateInString(cal.getTime()));
+        currentDay.setText(displayDayInString(cal.getTime()));
         indexStatus = true;
         displayDailyEvents();
         ImageView previousDay = findViewById(R.id.previous_day);
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "removing index:" + eventIndex);
         cal.add(Calendar.DAY_OF_MONTH, -1);
         currentDate.setText(displayDateInString(cal.getTime()));
+        currentDay.setText(displayDayInString(cal.getTime()));
         displayDailyEvents();
     }
     private void nextCalendarDate(){
@@ -73,10 +77,15 @@ public class MainActivity extends AppCompatActivity {
         }        Log.d(TAG, "removing index:" + eventIndex);
         cal.add(Calendar.DAY_OF_MONTH, 1);
         currentDate.setText(displayDateInString(cal.getTime()));
+        currentDay.setText(displayDayInString(cal.getTime()));
         displayDailyEvents();
     }
     private String displayDateInString(Date mDate){
         SimpleDateFormat formatter = new SimpleDateFormat("d MMMM, yyyy", Locale.ENGLISH);
+        return formatter.format(mDate);
+    }
+    private String displayDayInString(Date mDate){
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE", Locale.ENGLISH);
         return formatter.format(mDate);
     }
     private void displayDailyEvents(){
@@ -127,5 +136,11 @@ public class MainActivity extends AppCompatActivity {
         mLayout.addView(mEventView, eventIndex - 1);
         Log.d(TAG, "adding index:" + eventIndex);
         indexStatus = true;
+    }
+
+    public void launchAddActivity(View view) {
+    }
+
+    public void launchSettingActivity(View view) {
     }
 }
